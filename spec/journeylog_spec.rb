@@ -4,7 +4,7 @@ describe JourneyLog do
 
 subject(:journeylog) {described_class.new(journey_class)}
 let(:journey_class)  {double :journey_class, new: journey}
-let(:journey)        {double :journey, complete: nil}
+let(:journey)        {double :journey, complete: nil, fare: 1, add_penalty_fare: nil}
 let(:entry_station)  {double :entry_station}
 let(:exit_station)   {double :exit_station}
 
@@ -48,6 +48,13 @@ describe '#initialize' do
       expect(journeylog.instance_variable_get(:@journey_history)).to eq [journey]
     end
 
+  end
+
+  describe '#penalty_fare' do
+    it 'adds penalty fare penalities' do
+      journeylog.finish(exit_station)
+      expect(journeylog.instance_variable_get(:@penalties)).to eq described_class::PENALTY_FARE
+    end
   end
 
 end

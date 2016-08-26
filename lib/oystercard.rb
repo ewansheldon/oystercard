@@ -8,10 +8,8 @@ class Oystercard
   DEFAULT_BALANCE = 0
   MINIMUM_FARE = 1
 
-  def initialize(journey_class = Journey)
-    @journey = nil
-    @journey_class = journey_class
-    @journeys = []
+  def initialize(journey_log = JourneyLog.new)
+    @journey_log = journey_log
     @balance = DEFAULT_BALANCE
   end
 
@@ -21,34 +19,30 @@ class Oystercard
     balance_confirmation
   end
 
-  def touch_in(station)
+  def touch_in(entry_station)
     fail 'Insufficient funds' if balance < MINIMUM_FARE
-    no_touch_out_penalty unless @journey.nil?
-    @journey = @journey_class.new(station)
+    @journey_log.start(entry_station)
   end
 
-  def touch_out(station)
-    no_touch_in_penalty if @journey.nil?
-    close_journey(station)
+  def touch_out(exit_station)
+    close_journey(exit_station)
+    deduct(@journey_log.get_fare)
   end
 
   private
 
   def no_touch_in_penalty
-      @journey = @journey_class.new('Unknown Station')
-      @journey.add_penalty_fare
+      @journey_log.start('Unknown Station')
+      @journey_log.add_penalty_fare
   end
 
   def no_touch_out_penalty
-    @journey.add_penalty_fare
-    close_journey('Unknown Station')
+    @journey_log.penalty_fare
+    @journey_log.finish('Unknown Station')
   end
 
-  def close_journey(station)
-    @journey.complete(station)
-    deduct(@journey.fare)
-    record_journey
-    @journey = nil
+  def close_journey(exit_station)
+    @journey_log.finish(exit_station)
   end
 
   def full?
@@ -63,10 +57,6 @@ class Oystercard
     fail 'Insufficient funds' if amount > balance
     @balance -= amount
     balance_confirmation
-  end
-
-  def record_journey
-    @journeys << @journey
   end
 
 end

@@ -39,11 +39,4 @@ subject(:journey) {described_class.new("station")}
     end
   end
 
-  context 'dealing with penalty fares' do
-    it 'adds penalty_fare to fare'do
-      journey.add_penalty_fare
-      expect(journey.fare).to eq (Journey::MINIMUM_FARE + Journey::PENALTY_FARE)
-    end
-  end
-
 end
