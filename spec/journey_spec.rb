@@ -39,15 +39,6 @@ subject(:journey) {described_class.new("station")}
     end
   end
 
-  describe '#receipt' do
-
-    it 'returns single journey data' do
-      journey.complete("station2")
-      expect(journey.receipt).to eq ({entry: "station", exit: "station2", fare: Journey::MINIMUM_FARE})
-    end
-
-  end
-
   context 'dealing with penalty fares' do
     it 'adds penalty_fare to fare'do
       journey.add_penalty_fare

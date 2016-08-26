@@ -79,7 +79,7 @@ describe Oystercard do
     end
 
     it 'stores a journey' do
-      expect(oystercard.journeys).to eq([receipt])
+      expect(oystercard.journeys).to eq([journey])
     end
 
     context 'dealing with penalty fares' do

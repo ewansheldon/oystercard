@@ -66,7 +66,7 @@ class Oystercard
   end
 
   def record_journey
-    @journeys << @journey.receipt
+    @journeys << @journey
   end
 
 end
