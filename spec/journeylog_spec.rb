@@ -30,9 +30,24 @@ describe '#initialize' do
 
   describe '#finish' do
     it 'calls complete on the journey instance' do
+      journeylog.start(entry_station)
       journeylog.finish(exit_station)
       expect(journey).to have_received(:complete).with(exit_station)
     end
+
+
+    it 'clears current journey' do
+      journeylog.start(entry_station)
+      journeylog.finish(exit_station)
+      expect(journeylog.instance_variable_get(:@current_journey)).to be_nil
+    end
+
+    it 'saves completed journey' do
+      journeylog.start(entry_station)
+      journeylog.finish(exit_station)
+      expect(journeylog.instance_variable_get(:@journey_history)).to eq [journey]
+    end
+
   end
 
 end
